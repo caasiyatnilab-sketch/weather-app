@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn to build weather apps with openweathermap api">
+    <meta property="og:title" content="Weather App">
+    <meta property="og:description" content="A modern weather app built with openweathermap">
+    <meta name="keywords" content="weather app, climate, api">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Weather App</h1>
+        <div class="search-container">
+            <input type="text" id="cityInput" placeholder="Enter city name...">
+            <button onclick="searchWeather()">Search</button>
+        </div>
+        <div id="weatherInfo" class="weather-info hidden">
+            <div class="city-name">
+                <h2 id="cityName"></h2>
+                <p id="date"></p>
+            </div>
+            <div class="weather-main">
+                <div class="temperature">
+                    <span id="temp"></span><span class="unit">°C</span>
+                </div>
+                <div class="weather-description">
+                    <p id="description"></p>
+                    <img id="weatherIcon" src="" alt="Weather icon">
+                </div>
+            </div>
+            <div class="weather-details">
+                <div class="detail"><span class="label">Feels Like</span><span id="feelsLike" class="value"></span></div>
+                <div class="detail"><span class="label">Humidity</span><span id="humidity" class="value"></span></div>
+                <div class="detail"><span class="label">Wind Speed</span><span id="windSpeed" class="value"></span></div>
+                <div class="detail"><span class="label">Pressure</span><span id="pressure" class="value"></span></div>
+            </div>
+        </div>
+        <div id="errorMessage" class="error hidden"></div>
+        <div id="loadingSpinner" class="loading hidden">Loading...</div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
