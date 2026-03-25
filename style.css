@@ -4,7 +4,6 @@
   box-sizing: border-box;
 }
 
-/* CSS Variables for easy theming */
 :root {
   --primary-bg: #1a1a2e;
   --secondary-bg: #16213e;
@@ -18,10 +17,10 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: var(--primart-bg);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--primary-bg);
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  min-heignht: 100vh;
+  min-height: 100vh;
   color: var(--text-light);
   display: flex;
   justify-content: center;
@@ -29,7 +28,6 @@ body {
   padding: 20px;
 }
 
-/* Main container with glass effect */
 .container {
   background: var(--glass-bg);
   backdrop-filter: blur(10px);
@@ -51,7 +49,6 @@ h1 {
   background-clip: text;
 }
 
-/* Search container */
 .search-container {
   display: flex;
   gap: 10px;
@@ -59,7 +56,7 @@ h1 {
 }
 
 input {
-  fex: 1;
+  flex: 1;
   padding: 12px 20px;
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
@@ -96,7 +93,6 @@ button:hover {
   box-shadow: 0 8px 20px rgba(233, 69, 96, 0.4);
 }
 
-/* Weather info card - hidden by default */
 .weather-info {
   background: var(--card-bg);
   border-radius: 16px;
@@ -110,7 +106,6 @@ button:hover {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* City name and date */
 .city-name {
   text-align: center;
   margin-bottom: 1rem;
@@ -126,7 +121,6 @@ button:hover {
   font-size: 0.9rem;
 }
 
-/* Main weather display */
 .weather-main {
   display: flex;
   justify-content: space-around;
@@ -159,7 +153,6 @@ button:hover {
   height: 80px;
 }
 
-/* Weather details grid */
 .weather-details {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -187,7 +180,6 @@ button:hover {
   font-weight: 600;
 }
 
-/* Error message */
 .error {
   background: rgba(233, 69, 96, 0.2);
   border: 1px solid var(--highlight);
@@ -198,19 +190,16 @@ button:hover {
   margin-top: 1rem;
 }
 
-/* Loading spinner */
 .loading {
   text-align: center;
   padding: 2rem;
   color: var(--text-muted);
 }
 
-/* Utility classes */
 .hidden {
   display: none !important;
 }
 
-/* Responsive design */
 @media (max-width: 480px) {
   .container {
     padding: 1.5rem;
