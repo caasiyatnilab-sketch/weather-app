@@ -1,0 +1,230 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* CSS Variables for easy theming */
+:root {
+  --primary-bg: #1a1a2e;
+  --secondary-bg: #16213e;
+  --accent: #0f3460;
+  --highlight: #e94560;
+  --text-light: #eaeaea;
+  --text-muted: #a0a0a0;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--primart-bg);
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  min-heignht: 100vh;
+  color: var(--text-light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Main container with glass effect */
+.container {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Search container */
+.search-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+input {
+  fex: 1;
+  padding: 12px 20px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-light);
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s;
+}
+
+input:focus {
+  border-color: var(--highlight);
+  box-shadow: 0 0 15px rgba(233, 69, 96, 0.3);
+}
+
+input::placeholder {
+  color: var(--text-muted);
+}
+
+button {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--highlight), #7b2cbf);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(233, 69, 96, 0.4);
+}
+
+/* Weather info card - hidden by default */
+.weather-info {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* City name and date */
+.city-name {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.city-name h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.3rem;
+}
+
+.city-name p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Main weather display */
+.weather-main {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.temperature {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.temperature span.unit {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+}
+
+.weather-description {
+  text-align: center;
+}
+
+.weather-description p {
+  text-transform: capitalize;
+  margin-bottom: 0.5rem;
+}
+
+.weather-icon {
+  width: 80px;
+  height: 80px;
+}
+
+/* Weather details grid */
+.weather-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.detail {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.detail .label {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+}
+
+.detail .value {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Error message */
+.error {
+  background: rgba(233, 69, 96, 0.2);
+  border: 1px solid var(--highlight);
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  color: #ff6b6b;
+  margin-top: 1rem;
+}
+
+/* Loading spinner */
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+/* Utility classes */
+.hidden {
+  display: none !important;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .container {
+    padding: 1.5rem;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  .temperature {
+    font-size: 2.5rem;
+  }
+  
+  .weather-details {
+    grid-template-columns: 1fr;
+  }
+}
