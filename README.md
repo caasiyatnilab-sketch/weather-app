@@ -1,0 +1,1 @@
+# Weather App | Description: Weather forecast app using OpenWeatherMap API. | Setup: Get API key from openweathermap.org, clone repo, create .env, run local server. | Live Demo: https://caasiyatnilab-sketch.github.io/weather-app/
