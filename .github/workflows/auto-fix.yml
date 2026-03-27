@@ -1,0 +1,68 @@
+name: 🛠️ Auto Fix
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  auto-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 🔍 Run Auto Fix
+        id: fix
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          chmod +x scripts/auto-fix.sh
+          bash scripts/auto-fix.sh
+
+      - name: 📊 Upload Fix Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fix-report-${{ github.run_number }}
+          path: fix-report.md
+          retention-days: 30
+
+      - name: 📤 Create Fix PR
+        if: steps.fix.outputs.changes == 'true' && github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="auto-fix/$(date +%Y%m%d-%H%M%S)"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add -A
+          git commit -m "🛠️ auto-fix: lint, format, and dependency fixes
+
+          Automated fixes applied by RepoBot:
+          - Lint corrections
+          - Code formatting
+          - Dependency updates
+          - Minor bug fixes"
+          git push origin "$BRANCH"
+          gh pr create \
+            --title "🛠️ Auto-Fix: Automated corrections" \
+            --body "$(cat fix-report.md)" \
+            --base "${{ github.ref_name }}" \
+            --head "$BRANCH" \
+            --label "automated,bug-fix" \
+            --reviewer "${{ github.repository_owner }}"

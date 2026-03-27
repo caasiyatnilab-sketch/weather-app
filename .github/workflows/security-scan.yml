@@ -1,0 +1,149 @@
+name: 🔒 Security Scan
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2AM UTC
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  issues: write
+  actions: read
+
+jobs:
+  dependency-audit:
+    name: 📦 Dependency Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔍 Run Security Scan
+        id: scan
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          chmod +x scripts/security-scan.sh
+          bash scripts/security-scan.sh
+
+      - name: 📊 Upload Security Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report-${{ github.run_number }}
+          path: security-report.md
+          retention-days: 90
+
+      - name: 🚨 Create Security Issue
+        if: failure() && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "🔒 Security Vulnerabilities Found — $(date +%Y-%m-%d)" \
+            --body "$(cat security-report.md)" \
+            --label "security,automated,high-priority" \
+            --assignee "${{ github.repository_owner }}"
+
+  secret-scan:
+    name: 🔑 Secret Detection
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔑 Detect Secrets
+        run: |
+          echo "## 🔑 Secret Detection Report" > secret-report.md
+          echo "" >> secret-report.md
+          echo "Scanned at: $(date -u)" >> secret-report.md
+          echo "" >> secret-report.md
+
+          # Common secret patterns
+          PATTERNS=(
+            'AKIA[0-9A-Z]{16}'          # AWS Access Key
+            'sk-[a-zA-Z0-9]{48}'         # OpenAI API Key
+            'ghp_[a-zA-Z0-9]{36}'        # GitHub PAT
+            'xox[baprs]-[a-zA-Z0-9-]+'  # Slack Token
+            '-----BEGIN (RSA |EC )?PRIVATE KEY-----'  # Private Keys
+            'npm_[A-Za-z0-9]{36}'        # NPM Token
+            'sk_live_[a-zA-Z0-9]{24}'    # Stripe Live Key
+            'sk_test_[a-zA-Z0-9]{24}'    # Stripe Test Key
+            'AIza[0-9A-Za-z_-]{35}'      # Google API Key
+          )
+
+          FOUND=0
+          for pattern in "${PATTERNS[@]}"; do
+            RESULTS=$(git log --all -p -S "$pattern" --diff-filter=ACMR 2>/dev/null | grep -oE "$pattern" | head -5 || true)
+            if [ -n "$RESULTS" ]; then
+              echo "⚠️ Potential secret found matching pattern: \`${pattern}\`" >> secret-report.md
+              FOUND=1
+            fi
+          done
+
+          # Check current files
+          for pattern in "${PATTERNS[@]}"; do
+            RESULTS=$(grep -rnE "$pattern" --include="*.{js,ts,py,json,yml,yaml,env,conf,cfg,ini}" . 2>/dev/null | grep -v node_modules | grep -v '.git/' | head -5 || true)
+            if [ -n "$RESULTS" ]; then
+              echo "⚠️ Potential secret in current files:" >> secret-report.md
+              echo '```' >> secret-report.md
+              echo "$RESULTS" >> secret-report.md
+              echo '```' >> secret-report.md
+              FOUND=1
+            fi
+          done
+
+          if [ "$FOUND" -eq 0 ]; then
+            echo "✅ No secrets detected." >> secret-report.md
+          else
+            echo "" >> secret-report.md
+            echo "### 🚨 Action Required" >> secret-report.md
+            echo "1. Rotate any exposed credentials immediately" >> secret-report.md
+            echo "2. Add secrets to GitHub Secrets instead of code" >> secret-report.md
+            echo "3. Add the file pattern to .gitignore" >> secret-report.md
+          fi
+
+          cat secret-report.md
+
+      - name: 📊 Upload Secret Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: secret-report-${{ github.run_number }}
+          path: secret-report.md
+          retention-days: 90
+
+  codeql:
+    name: 🧠 CodeQL Analysis
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'schedule'
+    permissions:
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['javascript-typescript']
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🧠 Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: 🏗️ Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: 🔍 Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
