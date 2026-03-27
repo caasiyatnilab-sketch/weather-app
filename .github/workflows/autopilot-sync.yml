@@ -1,0 +1,23 @@
+name: 🤖 Autopilot Sync
+on:
+  schedule: [{ cron: '0 */6 * * *' }]
+  workflow_dispatch:
+permissions: { contents: read, issues: write, actions: write }
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { repository: 'caasiyatnilab-sketch/github-autopilot', path: autopilot, token: ${{ secrets.GITHUB_TOKEN }} }
+      - name: Run bots
+        env: { GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}, REPO: ${{ github.repository }} }
+        run: |
+          cd autopilot
+          source shared/utils.sh
+          for bot in bots/*/scripts/*.sh; do
+            echo "Running $(basename $bot)..."
+            bash "$bot" || true
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: bot-reports, path: autopilot/*-report.md }
