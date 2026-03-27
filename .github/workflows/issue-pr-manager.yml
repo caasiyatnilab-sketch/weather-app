@@ -1,75 +1,16 @@
 name: 🏷️ Issue & PR Manager
-
 on:
-  issues:
-    types: [opened, labeled, unlabeled, assigned, unassigned]
-  pull_request:
-    types: [opened, ready_for_review, review_requested]
-  schedule:
-    - cron: '0 0 * * *'  # Daily at midnight UTC
+  issues: { types: [opened] }
+  schedule: [{ cron: '0 0 * * *' }]
   workflow_dispatch:
-
-permissions:
-  issues: write
-  pull-requests: write
-  contents: read
-
+permissions: { issues: write, pull-requests: write, contents: read }
 jobs:
-  issue-manager:
-    name: 📋 Issue Management
+  manage:
     runs-on: ubuntu-latest
-    if: github.event_name == 'issues' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
-      - name: 📥 Checkout
-        uses: actions/checkout@v4
-
-      - name: 🏷️ Auto-Label Issues
-        if: github.event.action == 'opened'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
+      - name: 🏷️ Run
+        env: { GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}', REPO: '${{ github.repository }}' }
         run: |
-          chmod +x scripts/issue-manager.sh
-          bash scripts/issue-manager.sh label
-
-      - name: 👋 Welcome First-Time Contributors
-        if: github.event.action == 'opened'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          bash scripts/issue-manager.sh welcome
-
-      - name: 🧹 Stale Issue Cleanup
-        if: github.event_name == 'schedule'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          bash scripts/issue-manager.sh stale
-
-  pr-manager:
-    name: 🔀 PR Management
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.event_name == 'schedule'
-    steps:
-      - name: 📥 Checkout
-        uses: actions/checkout@v4
-
-      - name: 🏷️ Auto-Label PRs
-        if: github.event.action == 'opened'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          chmod +x scripts/pr-manager.sh
-          bash scripts/pr-manager.sh label
-
-      - name: 📏 PR Size Labeler
-        if: github.event.action == 'opened' || github.event.action == 'ready_for_review'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          bash scripts/pr-manager.sh size
-
-      - name: 🔍 PR Quality Check
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          bash scripts/pr-manager.sh quality
+          source shared/utils.sh
+          bash bots/issue-pr-manager/scripts/issue-pr-manager.sh all
