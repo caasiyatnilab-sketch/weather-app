@@ -1,7 +1,7 @@
 /**
  * Weather App - JavaScript
  * A beginner-friendly weather application using OpenWeatherMap API
- * 
+ *
  * To get a free API key:
  * 1. Go to https://openweathermap.org/ap
  * 2. Sign up for a free account
@@ -38,22 +38,22 @@ cityInput.addEventListener('keypress', function(event) {
 async function searchWeather() {
     // Get the city name from input
     const city = cityInput.value.trim();
-    
+
     // Validation: Check if city name is empty
     if (!city) {
         showError('Please enter a city name');
         return;
     }
-    
+
     // Show loading state
     showLoading(true);
     hideWeatherInfo();
     hideError();
-    
+
     try {
         // Fetch weather data from API
         const weatherData = await fetchWeather(city);
-        
+
         // Display the weather information
         displayWeather(weatherData);
     } catch (error) {
@@ -73,10 +73,10 @@ async function searchWeather() {
 async function fetchWeather(city) {
     // Build the API URL with city name and API key
     const url = `${BASE_URL}?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric`;
-    
+
     // Make the API request
     const response = await fetch(url);
-    
+
     // Check if the city was found
     if (!response.ok) {
         if (response.status === 404) {
@@ -87,7 +87,7 @@ async function fetchWeather(city) {
             throw new Error('Failed to fetch weather data. Please try again.');
         }
     }
-    
+
     // Convert response to JSON format
     const data = await response.json();
     return data;
@@ -105,17 +105,17 @@ function displayWeather(data) {
     const humidity = data.main.humidity;
     const pressure = data.main.pressure;
     const windSpeed = data.wind.speed;
-    
+
     // Weather description (e.g., "partly cloudy")
     const description = data.weather[0].description;
-    
+
     // City name from API (might be formatted differently)
     const cityName = data.name;
-    
+
     // Get weather icon code from API
     const iconCode = data.weather[0].icon;
     const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-    
+
     // Get current date
     const date = new Date().toLocaleDateString('en-US', {
         weekday: 'long',
@@ -123,26 +123,26 @@ function displayWeather(data) {
         month: 'long',
         day: 'numeric'
     });
-    
+
     // ===== UPDATE THE DOM =====
     // Set city name
     document.getElementById('cityName').textContent = cityName;
     document.getElementById('date').textContent = date;
-    
+
     // Set temperature
     document.getElementById('temp').textContent = temperature;
-    
+
     // Set weather description and icon
     document.getElementById('description').textContent = description;
     document.getElementById('weatherIcon').src = iconUrl;
     document.getElementById('weatherIcon').alt = description;
-    
+
     // Set weather details
     document.getElementById('feelsLike').textContent = `${feelsLike}°C`;
     document.getElementById('humidity').textContent = `${humidity}%`;
     document.getElementById('windSpeed').textContent = `${windSpeed} m/s`;
     document.getElementById('pressure').textContent = `${pressure} hPa`;
-    
+
     // Show the weather info section
     hideLoading();
     hideError();

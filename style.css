@@ -204,15 +204,15 @@ button:hover {
   .container {
     padding: 1.5rem;
   }
-  
+
   h1 {
     font-size: 1.5rem;
   }
-  
+
   .temperature {
     font-size: 2.5rem;
   }
-  
+
   .weather-details {
     grid-template-columns: 1fr;
   }
