@@ -1,1 +1,64 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Weather 2026</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;background:#030712;color:#f9fafb;min-height:100vh}nav{position:fixed;top:0;width:100%;padding:1rem 6%;display:flex;justify-content:space-between;align-items:center;background:rgba(3,7,18,.85);backdrop-filter:blur(20px);z-index:1000}.logo{font-size:1.4rem;font-weight:800}.logo span{background:linear-gradient(135deg,#6366f1,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.container{max-width:800px;margin:0 auto;padding:6rem 6% 2rem}h1{text-align:center;font-size:2rem;font-weight:800;margin-bottom:.5rem}.hl{background:linear-gradient(135deg,#6366f1,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.sub{text-align:center;color:#9ca3af;margin-bottom:2rem}.search{display:flex;gap:.5rem;max-width:400px;margin:0 auto 2rem}input{flex:1;padding:.8rem 1rem;background:#1e293b;border:1px solid rgba(99,102,241,.15);border-radius:12px;color:#f9fafb;font-size:1rem}input:focus{outline:none;border-color:#6366f1}input::placeholder{color:#64748b}button{padding:.8rem 1.5rem;background:linear-gradient(135deg,#6366f1,#06b6d4);border:none;border-radius:12px;color:#fff;font-weight:600;cursor:pointer}.current{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:2rem;text-align:center;margin-bottom:2rem}.temp{font-size:4rem;font-weight:800;background:linear-gradient(135deg,#6366f1,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.details{display:flex;justify-content:center;gap:1.5rem;margin-top:1rem;flex-wrap:wrap}.detail{background:rgba(255,255,255,.03);padding:.8rem 1.2rem;border-radius:12px;text-align:center}.detail .label{color:#6b7280;font-size:.8rem}.detail .value{font-weight:600;font-size:1.1rem}.forecast{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem}.day{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:1.2rem;text-align:center;transition:.3s}.day:hover{transform:translateY(-3px);border-color:rgba(99,102,241,.3)}.day .date{color:#9ca3af;font-size:.85rem;margin-bottom:.5rem}.day .icon{font-size:2rem;margin:.5rem 0}.day .range{font-weight:600}footer{text-align:center;padding:2rem;color:#6b7280;font-size:.85rem}footer span{color:#06b6d4}@media(max-width:600px){.temp{font-size:3rem}.details{gap:.8rem}}</style></head><body><nav><div class="logo"><span>🌤️ Weather</span></div></nav><div class="container"><h1><span class="hl">Weather Dashboard</span></h1><p class="sub">Live forecast powered by Open-Meteo API</p><div class="search"><input id="city" placeholder="Enter city..." value="Manila" onkeydown="if(event.key==='Enter')load()"><button onclick="load()">🔍 Search</button></div><div class="current" id="current"></div><h2 style="font-size:1.3rem;margin-bottom:1rem">📅 5-Day Forecast</h2><div class="forecast" id="forecast"></div></div><footer>Built with ❤️ | © <span>2026</span> | Powered by 23 AI Bots</footer><script>async function load(){const city=document.getElementById('city').value;try{const r=await fetch('https://wttr.in/'+city+'?format=j1');const d=await r.json();const c=d.current_condition[0];document.getElementById('current').innerHTML='<div class="temp">'+c.temp_C+'°C</div><p style="color:#9ca3af;margin:.5rem 0">'+c.weatherDesc[0].value+'</p><div class="details"><div class="detail"><div class="label">💨 Wind</div><div class="value">'+c.windspeedKmph+' km/h</div></div><div class="detail"><div class="label">💧 Humidity</div><div class="value">'+c.humidity+'%</div></div><div class="detail"><div class="label">🌡️ Feels Like</div><div class="value">'+c.FeelsLikeC+'°C</div></div><div class="detail"><div class="label">👁️ Visibility</div><div class="value">'+c.visibility+' km</div></div></div>';document.getElementById('forecast').innerHTML=d.weather.slice(0,5).map(w=>'<div class="day"><div class="date">'+w.date+'</div><div class="icon">'+(w.hourly[4].weatherDesc[0].value.toLowerCase().includes('sun')?'☀️':w.hourly[4].weatherDesc[0].value.toLowerCase().includes('rain')?'🌧️':w.hourly[4].weatherDesc[0].value.toLowerCase().includes('cloud')?'☁️':'🌤️')+'</div><div class="range">'+w.mintempC+'° — '+w.maxtempC+'°</div></div>').join('')}catch(e){document.getElementById('current').innerHTML='<p style="color:#ef4444">City not found</p>'}}load()</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',system-ui;background:#fff;color:#1a1a1a;min-height:100vh}
+    .nav{padding:1rem 6%;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+    .nav .logo{font-weight:700;font-size:1.2rem}
+    .container{max-width:700px;margin:0 auto;padding:2rem 6%}
+    h1{font-size:1.8rem;font-weight:700;margin-bottom:.3rem}
+    .sub{color:#666;margin-bottom:2rem}
+    .search{display:flex;gap:.5rem;margin-bottom:2rem}
+    input{flex:1;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font-size:.9rem;font-family:inherit}
+    input:focus{outline:none;border-color:#6366f1}
+    button{padding:.6rem 1.2rem;background:#6366f1;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer}
+    .current{background:#f8f9fa;border:1px solid #eee;border-radius:12px;padding:2rem;text-align:center;margin-bottom:2rem}
+    .temp{font-size:3.5rem;font-weight:700;color:#1a1a1a}
+    .desc{color:#666;margin:.5rem 0}
+    .details{display:flex;justify-content:center;gap:1.5rem;margin-top:1rem;flex-wrap:wrap}
+    .detail{background:#fff;padding:.6rem 1rem;border-radius:8px;border:1px solid #eee;text-align:center}
+    .detail .label{font-size:.75rem;color:#999}
+    .detail .value{font-weight:600;font-size:.95rem}
+    h2{font-size:1.2rem;font-weight:600;margin-bottom:1rem}
+    .forecast{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.8rem}
+    .day{background:#f8f9fa;border:1px solid #eee;border-radius:10px;padding:1rem;text-align:center}
+    .day .date{color:#666;font-size:.8rem;margin-bottom:.4rem}
+    .day .range{font-weight:600}
+    footer{text-align:center;padding:2rem;color:#999;font-size:.8rem;border-top:1px solid #eee;margin-top:3rem}
+    @media(max-width:500px){.temp{font-size:2.5rem}}
+  </style>
+</head>
+<body>
+  <div class="nav"><div class="logo">Weather</div></div>
+  <div class="container">
+    <h1>Weather</h1>
+    <p class="sub">Live forecast. Free API.</p>
+    <div class="search">
+      <input id="city" placeholder="Enter city..." value="Manila" onkeydown="if(event.key==='Enter')load()">
+      <button onclick="load()">Search</button>
+    </div>
+    <div class="current" id="current"></div>
+    <h2>5-Day Forecast</h2>
+    <div class="forecast" id="forecast"></div>
+  </div>
+  <footer>Isaac Balintay | 2026</footer>
+  <script>
+    async function load(){
+      const city=document.getElementById('city').value;
+      try{
+        const r=await fetch('https://wttr.in/'+city+'?format=j1');
+        const d=await r.json();
+        const c=d.current_condition[0];
+        document.getElementById('current').innerHTML='<div class="temp">'+c.temp_C+'C</div><p class="desc">'+c.weatherDesc[0].value+'</p><div class="details"><div class="detail"><div class="label">Wind</div><div class="value">'+c.windspeedKmph+' km/h</div></div><div class="detail"><div class="label">Humidity</div><div class="value">'+c.humidity+'%</div></div><div class="detail"><div class="label">Feels Like</div><div class="value">'+c.FeelsLikeC+'C</div></div></div>';
+        document.getElementById('forecast').innerHTML=d.weather.slice(0,5).map(w=>'<div class="day"><div class="date">'+w.date+'</div><div class="range">'+w.mintempC+' - '+w.maxtempC+' C</div></div>').join('');
+      }catch(e){document.getElementById('current').innerHTML='<p style="color:red">City not found</p>'}
+    }
+    load();
+  </script>
+</body>
+</html>
