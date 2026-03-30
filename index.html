@@ -39,26 +39,14 @@
     <h1>Weather</h1>
     <p class="sub">Live forecast. Free API.</p>
     <div class="search">
-      <input id="city" placeholder="Enter city..." value="Manila" onkeydown="if(event.key==='Enter')load()">
-      <button onclick="load()">Search</button>
+      <input id="city" placeholder="Enter city..." value="Manila">
+      <button>Search</button>
     </div>
     <div class="current" id="current"></div>
     <h2>5-Day Forecast</h2>
     <div class="forecast" id="forecast"></div>
   </div>
   <footer>Isaac Balintay | 2026</footer>
-  <script>
-    async function load(){
-      const city=document.getElementById('city').value;
-      try{
-        const r=await fetch('https://wttr.in/'+city+'?format=j1');
-        const d=await r.json();
-        const c=d.current_condition[0];
-        document.getElementById('current').innerHTML='<div class="temp">'+c.temp_C+'C</div><p class="desc">'+c.weatherDesc[0].value+'</p><div class="details"><div class="detail"><div class="label">Wind</div><div class="value">'+c.windspeedKmph+' km/h</div></div><div class="detail"><div class="label">Humidity</div><div class="value">'+c.humidity+'%</div></div><div class="detail"><div class="label">Feels Like</div><div class="value">'+c.FeelsLikeC+'C</div></div></div>';
-        document.getElementById('forecast').innerHTML=d.weather.slice(0,5).map(w=>'<div class="day"><div class="date">'+w.date+'</div><div class="range">'+w.mintempC+' - '+w.maxtempC+' C</div></div>').join('');
-      }catch(e){document.getElementById('current').innerHTML='<p style="color:red">City not found</p>'}
-    }
-    load();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
